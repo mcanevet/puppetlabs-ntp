@@ -4,9 +4,12 @@ describe 'ntp' do
 
   ['Debian', 'RedHat','SuSE', 'FreeBSD', 'Archlinux', 'Gentoo', 'Gentoo (Facter < 1.7)'].each do |system|
     if system == 'Gentoo (Facter < 1.7)'
-      let(:facts) {{ :osfamily => 'Linux', :operatingsystem => 'Gentoo' }}
+      let(:facts) {{ :is_virtual      => 'false',
+                     :operatingsystem => 'Gentoo',
+                     :osfamily        => 'Linux' }}
     else
-      let(:facts) {{ :osfamily => system }}
+      let(:facts) {{ :is_virtual => 'false',
+                     :osfamily   => system }}
     end
 
     it { should contain_class('ntp::install') }
@@ -159,7 +162,8 @@ describe 'ntp' do
 
     context 'ntp::config' do
       describe "for operating system Gentoo (Facter < 1.7)" do
-        let(:facts) {{ :operatingsystem => 'Gentoo',
+        let(:facts) {{ :is_virtual      => 'false',
+                       :operatingsystem => 'Gentoo',
                        :osfamily        => 'Linux' }}
 
         it 'uses the NTP pool servers by default' do
@@ -170,7 +174,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily Gentoo" do
-        let(:facts) {{ :osfamily => 'Gentoo' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'Gentoo' }}
 
         it 'uses the NTP pool servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -180,7 +185,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily Debian" do
-        let(:facts) {{ :osfamily => 'debian' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'debian' }}
 
         it 'uses the debian ntp servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -190,7 +196,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily RedHat" do
-        let(:facts) {{ :osfamily => 'RedHat' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'RedHat' }}
 
         it 'uses the redhat ntp servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -200,7 +207,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily SuSE" do
-        let(:facts) {{ :osfamily => 'SuSE' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'SuSE' }}
 
         it 'uses the opensuse ntp servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -210,7 +218,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily FreeBSD" do
-        let(:facts) {{ :osfamily => 'FreeBSD' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'FreeBSD' }}
 
         it 'uses the freebsd ntp servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -220,7 +229,8 @@ describe 'ntp' do
       end
 
       describe "on osfamily ArchLinux" do
-        let(:facts) {{ :osfamily => 'ArchLinux' }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily   => 'ArchLinux' }}
 
         it 'uses the NTP pool servers by default' do
           should contain_file('/etc/ntp.conf').with({
@@ -230,9 +240,8 @@ describe 'ntp' do
       end
 
       describe "for operating system family unsupported" do
-        let(:facts) {{
-          :osfamily  => 'unsupported',
-        }}
+        let(:facts) {{ :is_virtual => 'false',
+                       :osfamily  => 'unsupported' }}
 
         it { expect{ subject }.to raise_error(
           /^The ntp module is not supported on an unsupported based system./
